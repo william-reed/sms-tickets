@@ -1,3 +1,3 @@
-package xyz.williamreed.sms
+package xyz.williamreed.smstickets.models
 
 enum class Carrier

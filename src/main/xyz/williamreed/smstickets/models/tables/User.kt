@@ -1,7 +1,7 @@
-package xyz.williamreed.sms.tickets.models
+package xyz.williamreed.smstickets.models.tables
 
 import org.jetbrains.exposed.dao.IntIdTable
-import xyz.williamreed.sms.Carrier
+import xyz.williamreed.smstickets.models.Carrier
 
 object User : IntIdTable() {
     val firstName = varchar("first_name", 32)

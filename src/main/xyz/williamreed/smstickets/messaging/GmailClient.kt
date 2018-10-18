@@ -67,7 +67,6 @@ class GmailClient(private val username: String, private val password: String,
         publishSubject = PublishSubject.create<Message>()
 
         inbox.addMessageCountListener(MessageCountHandler(publishSubject))
-        // Gmail IDLE needs calls about every 10 minutes it seems
         idleTimer = Observable.interval(0, IDLE_PERIOD, IDLE_UNIT)
                 .subscribeOn(scheduler)
                 .subscribe {
