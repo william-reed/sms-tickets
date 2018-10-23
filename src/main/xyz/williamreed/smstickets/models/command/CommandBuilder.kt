@@ -1,5 +1,7 @@
 package xyz.williamreed.smstickets.models.command
 
+import kotlin.reflect.KClass
+
 fun command(block: CommandBuilder.() -> Unit) = CommandBuilder().apply(block).build()
 
 class CommandBuilder {
@@ -9,6 +11,7 @@ class CommandBuilder {
     var noArgs = false
     var helpText = ""
     var defaultArgument = ""
+    var valueType: KClass<*> = String::class
     private val children = arrayListOf<Command>()
 
     fun child(block: CommandBuilder.() -> Unit) {
@@ -16,10 +19,10 @@ class CommandBuilder {
     }
 
     fun build(): Command {
-        if (noArgs)
-            return buildNoArgCmd()
+        return if (noArgs)
+            buildNoArgCmd()
         else
-            return buildArgCmd()
+            buildArgCmd()
     }
 
     private fun buildNoArgCmd(): NoArgumentCommand {
@@ -30,9 +33,9 @@ class CommandBuilder {
 
     private fun buildArgCmd(): ArgumentCommand {
         val cmd = if (defaultArgument !== "")
-            DefaultArgumentCommand(name, helpText, Regex(argumentPattern), defaultArgument, optional)
+            DefaultArgumentCommand(name, helpText, valueType, optional, Regex(argumentPattern), defaultArgument)
         else
-            ArgumentCommand(name, helpText, Regex(argumentPattern), optional)
+            ArgumentCommand(name, helpText, valueType, optional, Regex(argumentPattern))
         children.forEach { cmd.addChild(it) }
         return cmd
     }
@@ -49,6 +52,7 @@ class CommandBuilder {
 //        argumentPattern = "\\d"
 //        optional = true
 //        helpText = "how many pings do you want to send?"
+//        valueType = Int::class
 //    }
 //
 //    child {
