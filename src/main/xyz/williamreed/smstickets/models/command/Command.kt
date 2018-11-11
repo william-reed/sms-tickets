@@ -114,12 +114,11 @@ interface ValueCommand : Command {
      * Strip the input.
      * Remove the command name and values from the input string and return it
      * Subclasses will likely need to override and use this function in addition
-     * @throws IllegalArgumentException if the input is not validated
+     * If the command name is not contained the input string will be returned
      */
     override fun strip(input: String): String {
-        // TODO: need some way to cache validation so I'm not doing it everywhere
-        // or might not need validation here hmm
-        if (!validate(input)) throw IllegalArgumentException("Input not validated")
+        if (!input.contains(name))
+            return input
 
         val beforeName = input.substringBefore(name)
         val afterName = input.substringAfter(name).replaceFirst(pattern, "")

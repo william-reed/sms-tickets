@@ -135,14 +135,15 @@ class ValueArgumentCommandTest {
                 .isEqualTo(expectedMap)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun `strip with empty string returns empty string`() {
-        mandatoryCommand.strip("")
+        assertThat(mandatoryCommand.strip("")).isEqualTo("")
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `strip with random input gives throws IllegalArgumentException`() {
-        mandatoryCommand.strip("asdfa asdf iasd asbfabsdib sf")
+    @Test
+    fun `strip with random input gives back random input`() {
+        val randomInput = "asdfa sdf asdf asdf asdf asd f"
+        assertThat(mandatoryCommand.strip(randomInput)).isEqualTo(randomInput)
     }
 
     // these next commands demonstrate what happens to white space
@@ -177,9 +178,12 @@ class ValueArgumentCommandTest {
     }
 
     @Test
-    fun split() {
-        val input = "ping -c 3 -A 192.168.1.1"
-        println(input.substringBefore("-c"))
-        println(input.substringAfter("-c"))
+    fun `strip with just command name returns everything after it`() {
+        assertThat(mandatoryCommand.strip("ping -c random input")).isEqualTo("ping  random input")
+    }
+
+    @Test
+    fun `strip with just values returns everything`() {
+        assertThat(mandatoryCommand.strip("ping random input")).isEqualTo("ping random input")
     }
 }
